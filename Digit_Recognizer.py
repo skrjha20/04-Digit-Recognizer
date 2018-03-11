@@ -76,7 +76,7 @@ if __name__ == "__main__":
     input_layer_size = np.shape(theta1)[1] - 1
     hidden_layer_size = np.shape(theta2)[1] - 1
     theta = np.hstack((theta1.flatten(), theta2.flatten()))
-    lamda = 1
+    lamda = 3
     J, grad = cost_function(theta, X_train, y_train, input_layer_size, hidden_layer_size, lamda)
 
     initial_epsilon = 0.12
@@ -98,4 +98,10 @@ if __name__ == "__main__":
     pred_test = predict(final_theta1, final_theta2, X_test)
     print('Test Set Accuracy:', np.mean(pred_test == y_test.ravel()) * 100)
     confusion_matrix(pred_test,y_test.ravel())
+
     y_pred = predict(final_theta1, final_theta2, test)
+    y_pred = pd.DataFrame(y_pred)
+    y_pred.columns = ['Label']
+    submission = submission.drop(['Label'], axis=1)
+    submission = pd.concat([submission, y_pred], axis=1)
+    submission.to_csv('submission.csv')
